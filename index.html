@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MicroMinder – Your Daily Tiny Habit Tracker</title>
+  <!-- Import Google Fonts (Roboto) -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" />
+  <style>
+    /* Global Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #000; /* Black background */
+      color: #fff; /* White text */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    /* Header (Shop, Title & Settings) */
+    header {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #leftIcons, #rightIcons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+    /* Shop Button */
+    a#shopButton {
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    #shopIcon {
+      width: 24px;
+      height: 24px;
+    }
+    /* Settings Button */
+    a#settingsButton {
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    #settingsIcon {
+      width: 24px;
+      height: 24px;
+    }
+    /* Landing Page */
+    #landingPage {
+      text-align: center;
+    }
+    #landingPage h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    #getStartedButton {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #fff;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #getStartedButton:hover { opacity: 0.8; }
+    /* Check-In Page */
+    #checkInPage {
+      text-align: center;
+      display: none;
+    }
+    #habitText {
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+    #doneButton, #backButton {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #fff;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+      margin: 10px;
+    }
+    #doneButton:active, #backButton:active { transform: scale(0.95); }
+    #confirmationMessage {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      animation: fadeIn 0.5s;
+    }
+    /* Streak Tracker */
+    #streakTracker {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .dotContainer {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .streakDot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: #333;
+      border: 2px solid #fff;
+    }
+    .streakDot.active { background-color: #fff; }
+    /* Habit Selection Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(255, 255, 255, 0.1);
+      /* Center modal content */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background-color: #111;
+      padding: 20px;
+      border: 1px solid #fff;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 8px;
+      text-align: center;
+      color: #fff;
+    }
+    .modal-content h2 { margin-bottom: 15px; }
+    .modal-content p { margin-bottom: 15px; }
+    .habitOption {
+      background-color: transparent;
+      color: #fff;
+      border: 1px solid #fff;
+      padding: 10px;
+      width: 100%;
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .habitOption:hover {
+      background-color: #fff;
+      color: #000;
+    }
+    #skipHabit {
+      margin-top: 15px;
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #skipHabit:hover { opacity: 0.8; }
+    .close {
+      color: #fff;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover, .close:focus { color: #bbb; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <!-- Header with Shop icon (left), Title, and Settings icon (right) -->
+  <header>
+    <div id="leftIcons">
+      <a id="shopButton" href="shop.html" aria-label="Shop">
+        <img id="shopIcon" src="https://img.icons8.com/ios-filled/50/FFFFFF/shopping-cart.png" alt="Shop Icon" />
+      </a>
+    </div>
+    <h1>MicroMinder</h1>
+    <div id="rightIcons">
+      <a id="settingsButton" href="settings.html" aria-label="Settings">
+        <img id="settingsIcon" src="https://img.icons8.com/m_rounded/512/FFFFFF/settings.png" alt="Settings Icon" />
+      </a>
+    </div>
+  </header>
+  
+  <!-- Main content -->
+  <main>
+    <!-- Landing Page -->
+    <section id="landingPage">
+      <h2>Make every day count with one tiny habit</h2>
+      <button id="getStartedButton">Get Started</button>
+    </section>
+    
+    <!-- Daily Check-In Page -->
+    <section id="checkInPage">
+      <h2 id="habitText"></h2>
+      <button id="doneButton">Done</button>
+      <button id="backButton">Back</button>
+      <div id="confirmationMessage" aria-live="polite"></div>
+      <div id="streakTracker"></div>
+    </section>
+  </main>
+  
+  <!-- Habit Selection Modal (remains in the code for manual habit changes, but won't auto-open) -->
+  <div id="habitModal" class="modal">
+    <div class="modal-content">
+      <span class="close" title="Close Modal">&times;</span>
+      <h2>Select Your Micro-Habit</h2>
+      <p>What micro-habit would make your day better?</p>
+      <ul id="habitOptions">
+        <li><button class="habitOption">Drink a glass of water</button></li>
+        <li><button class="habitOption">Take 2 deep breaths</button></li>
+        <li><button class="habitOption">Stand up and stretch</button></li>
+      </ul>
+      <button id="skipHabit">Skip</button>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const landingPage = document.getElementById('landingPage');
+      const checkInPage = document.getElementById('checkInPage');
+      const getStartedButton = document.getElementById('getStartedButton');
+      const habitModal = document.getElementById('habitModal');
+      const habitOptions = document.querySelectorAll('.habitOption');
+      const skipHabitButton = document.getElementById('skipHabit');
+      const doneButton = document.getElementById('doneButton');
+      const backButton = document.getElementById('backButton');
+      const habitText = document.getElementById('habitText');
+      const confirmationMessage = document.getElementById('confirmationMessage');
+      const streakTracker = document.getElementById('streakTracker');
+      const closeModal = document.querySelector('.close');
+      
+      // Set a default habit
+      const defaultHabit = "Take 2 deep breaths";
+      let habit = localStorage.getItem('microMinderHabit');
+      if (habit) {
+        habitText.textContent = habit;
+      }
+      
+      // When Get Started is clicked, if no habit exists, automatically set the default habit
+      getStartedButton.addEventListener('click', function() {
+        if (!habit) {
+          habit = defaultHabit;
+          localStorage.setItem('microMinderHabit', habit);
+          habitText.textContent = habit;
+        }
+        landingPage.style.display = 'none';
+        checkInPage.style.display = 'block';
+        updateStreakDisplay();
+      });
+      
+      // Modal close event (for manual habit changes via the modal)
+      closeModal.addEventListener('click', function() {
+        habitModal.style.display = 'none';
+      });
+      
+      // Habit selection within the modal
+      habitOptions.forEach(button => {
+        button.addEventListener('click', function() {
+          habit = this.textContent;
+          localStorage.setItem('microMinderHabit', habit);
+          habitText.textContent = habit;
+          habitModal.style.display = 'none';
+          landingPage.style.display = 'none';
+          checkInPage.style.display = 'block';
+          updateStreakDisplay();
+        });
+      });
+      
+      // "Skip" button in modal (set to default habit)
+      skipHabitButton.addEventListener('click', function() {
+        habit = defaultHabit;
+        localStorage.setItem('microMinderHabit', habit);
+        habitText.textContent = habit;
+        habitModal.style.display = 'none';
+        landingPage.style.display = 'none';
+        checkInPage.style.display = 'block';
+        updateStreakDisplay();
+      });
+      
+      doneButton.addEventListener('click', function() {
+        const today = new Date().toDateString();
+        const lastCheckIn = localStorage.getItem('lastCheckIn');
+        if (lastCheckIn === today) {
+          confirmationMessage.textContent = "You've already checked in today!";
+          return;
+        }
+        
+        let streak = parseInt(localStorage.getItem('streak')) || 0;
+        if (lastCheckIn) {
+          const lastDate = new Date(lastCheckIn);
+          const diffDays = (new Date() - lastDate) / (1000 * 3600 * 24);
+          streak = (diffDays >= 1 && diffDays < 2) ? streak + 1 : 1;
+        } else {
+          streak = 1;
+        }
+        localStorage.setItem('streak', streak);
+        localStorage.setItem('lastCheckIn', today);
+        confirmationMessage.textContent = "Well done!";
+        confirmationMessage.style.opacity = 1;
+        setTimeout(() => { confirmationMessage.style.opacity = 0; }, 1500);
+        updateStreakDisplay();
+      });
+      
+      backButton.addEventListener('click', function() {
+        checkInPage.style.display = 'none';
+        landingPage.style.display = 'block';
+      });
+      
+      function updateStreakDisplay() {
+        streakTracker.innerHTML = '';
+        let streak = parseInt(localStorage.getItem('streak')) || 0;
+        const maxDots = 7;
+        const dotContainer = document.createElement('div');
+        dotContainer.classList.add('dotContainer');
+        for (let i = 0; i < maxDots; i++) {
+          const dot = document.createElement('div');
+          dot.classList.add('streakDot');
+          if (i < streak && streak <= maxDots) { dot.classList.add('active'); }
+          else if (streak > maxDots) { dot.classList.add('active'); }
+          dotContainer.appendChild(dot);
+        }
+        streakTracker.appendChild(dotContainer);
+        const streakCountDisplay = document.createElement('div');
+        streakCountDisplay.textContent = `Streak: ${streak} day${streak === 1 ? '' : 's'}`;
+        streakTracker.appendChild(streakCountDisplay);
+      }
+    });
+  </script>
+</body>
+</html>

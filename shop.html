@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MicroMinder - Shop</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    header a {
+      color: #fff;
+      text-decoration: none;
+      margin-right: auto;
+      font-size: 1.2rem;
+    }
+    header h1 { font-size: 1.5rem; margin: 0 auto; }
+    .content {
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .shopOption {
+      background-color: transparent;
+      color: #fff;
+      border: 1px solid #fff;
+      padding: 10px;
+      width: 100%;
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .shopOption:hover {
+      background-color: #fff;
+      color: #000;
+    }
+    button {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">&larr; Back</a>
+    <h1>Shop</h1>
+  </header>
+  <div class="content">
+    <h2>Premium Options</h2>
+    <p>Select a premium feature:</p>
+    <ul id="shopOptions">
+      <li><button class="shopOption">Custom Reminders - $2.99/month</button></li>
+      <li><button class="shopOption">Advanced Habit Analytics - $4.99/month</button></li>
+      <li><button class="shopOption">Ad-Free Experience - $1.99/month</button></li>
+    </ul>
+    <button id="shopBuy">Buy Now</button>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('shopBuy').addEventListener('click', function() {
+        alert("Purchase functionality is not implemented yet.");
+      });
+    });
+  </script>
+</body>
+</html>
